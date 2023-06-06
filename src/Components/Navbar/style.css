@@ -1,0 +1,50 @@
+:root {
+    --main-color: 50, 140, 230;
+    --main-color-dark: 10, 100, 190;
+}
+
+.navbar {
+    padding: 0 10%;
+    top: 0;
+    position: sticky;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 2px solid rgba(var(--main-color), 0.3);
+    min-height: 5rem;
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+}
+
+.nav-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    justify-content: right;
+}
+
+.nav-title {
+    font-family: 'Nunito Sans', sans-serif;
+    color: rgb(var(--main-color));
+    margin: 0;
+    font-size: 2.5em;
+}
+
+.github-link {
+    display: flex;
+    align-items: center;
+    fill: rgb(var(--main-color));
+}
+
+.github-link:visited {
+    color: rgb(var(--main-color-dark));
+}
