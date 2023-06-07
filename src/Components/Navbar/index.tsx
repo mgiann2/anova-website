@@ -10,7 +10,7 @@ function Navbar() {
             <div className='nav-center'>
             </div>
             <div className='nav-right'>
-                <a href="https://github.com/mgiann2/anova-website" className='github-link'>
+                <a href="https://github.com/mgiann2/anova-website" target="_blank" rel="noopener noreferrer" className='github-link'>
                     <p>GITHUB</p>
                 </a>
             </div>
