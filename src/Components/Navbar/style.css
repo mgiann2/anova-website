@@ -1,4 +1,5 @@
 :root {
+    --main-color-light: 96, 166, 235;
     --main-color: 50, 140, 230;
     --main-color-dark: 10, 100, 190;
 }
@@ -12,6 +13,7 @@
     justify-content: space-between;
     border-bottom: 2px solid rgba(var(--main-color), 0.3);
     min-height: 5rem;
+    background-color: rgb(var(--bg-light));
 }
 
 .nav-left {
