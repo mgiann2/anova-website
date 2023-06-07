@@ -5,10 +5,11 @@
     height: 100%;
     display: grid;
     gap: 2px;
-    background-color: rgb(var(--main-color-light));
+    background-color: rgb(var(--main-color));
     grid-template-rows: 3em auto;
     grid-template-columns: 1fr 1fr;
     border-radius: 2px;
+    box-shadow: 0 0 5px 0 rgba(var(--main-color-dark), 1);
 }
 
 .selector-btn {
@@ -47,4 +48,5 @@
     grid-column: 1/ span 2;
     margin: 0;
     background-color: rgb(var(--bg-light));
+    padding: 1em 10%;
 }
