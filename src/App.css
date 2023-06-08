@@ -9,6 +9,10 @@ body {
     background-color: rgb(var(--bg-light));
 }
 
+input {
+    font-family: 'Quicksand', sans-serif;
+}
+
 .main-content {
     margin: 2.5em 10%;
 }
