@@ -5,6 +5,126 @@ function TwoWayAnovaTable() {
     return (
         <>
             <h2>Data</h2>
+            <div className='factor-tables'>
+                <div>
+                    <h3>Factor A Levels</h3>
+                    <table>
+                        <tr>
+                            <th style={{width: "90%"}}>Level</th>
+                            <th style={{width: "10%"}}>Delete</th>
+                        </tr>
+                        <tr>
+                            <td><input type="text" className='table-input' placeholder='Input level'/></td>
+                            <td><button className='delete-row'>X</button></td>
+                        </tr>
+                        <tr>
+                            <td><input type="text" className='table-input' placeholder='Input level'/></td>
+                            <td><button className='delete-row'>X</button></td>
+                        </tr>
+                    </table>
+                    <button>Add Level</button>
+                </div>
+                <div>
+                    <h3>Factor B Levels</h3>
+                    <table>
+                        <tr>
+                            <th style={{width: "90%"}}>Level</th>
+                            <th style={{width: "10%"}}>Delete</th>
+                        </tr>
+                        <tr>
+                            <td><input type="text" className='table-input' placeholder='Input level'/></td>
+                            <td><button className='delete-row'>X</button></td>
+                        </tr>
+                        <tr>
+                            <td><input type="text" className='table-input' placeholder='Input level'/></td>
+                            <td><button className='delete-row'>X</button></td>
+                        </tr>
+                    </table>
+                    <button>Add Level</button>
+                </div>
+            </div>
+            <div>
+                <h3>Treatments</h3>
+                <table>
+                    <tr>
+                        <th style={{width: "30%"}}>Factor A Level</th>
+                        <th style={{width: "30%"}}>Factor B Level</th>
+                        <th style={{width: "40%"}}>Number of Observations</th>
+                    </tr>
+                    <tr>
+                        <td>Level 1</td>
+                        <td>Level 1</td>
+                        <td><input type="text" className='table-input' placeholder='Input # of observations'/></td>
+                    </tr>
+                    <tr>
+                        <td>Level 1</td>
+                        <td>Level 2</td>
+                        <td><input type="text" className='table-input' placeholder='Input # of observations'/></td>
+                    </tr>
+                    <tr>
+                        <td>Level 2</td>
+                        <td>Level 1</td>
+                        <td><input type="text" className='table-input' placeholder='Input # of observations'/></td>
+                    </tr>
+                    <tr>
+                        <td>Level 2</td>
+                        <td>Level 2</td>
+                        <td><input type="text" className='table-input' placeholder='Input # of observations'/></td>
+                    </tr>
+                </table>
+                <button>Update Table</button>
+                <p style={{color: "red"}}></p>
+            </div>
+            <h3>Response Data</h3>
+            <div style={{overflowY: "scroll"}}>
+                <table>
+                    <tr>
+                        <th style={{width: "30%"}}>Factor A Level</th>
+                        <th style={{width: "30%"}}>Factor B Level</th>
+                        <th style={{width: "40%"}}>Response</th>
+                    </tr>
+                    <tr>
+                        <td>Level 1</td>
+                        <td>Level 1</td>
+                        <td><input type="number" className='table-input' placeholder='Input response value'/></td>
+                    </tr>
+                    <tr>
+                        <td>Level 1</td>
+                        <td>Level 1</td>
+                        <td><input type="number" className='table-input' placeholder='Input response value'/></td>
+                    </tr>
+                    <tr>
+                        <td>Level 1</td>
+                        <td>Level 2</td>
+                        <td><input type="number" className='table-input' placeholder='Input response value'/></td>
+                    </tr>
+                    <tr>
+                        <td>Level 1</td>
+                        <td>Level 2</td>
+                        <td><input type="number" className='table-input' placeholder='Input response value'/></td>
+                    </tr>
+                    <tr>
+                        <td>Level 2</td>
+                        <td>Level 1</td>
+                        <td><input type="number" className='table-input' placeholder='Input response value'/></td>
+                    </tr>
+                    <tr>
+                        <td>Level 2</td>
+                        <td>Level 1</td>
+                        <td><input type="number" className='table-input' placeholder='Input response value'/></td>
+                    </tr>
+                    <tr>
+                        <td>Level 2</td>
+                        <td>Level 2</td>
+                        <td><input type="number" className='table-input' placeholder='Input response value'/></td>
+                    </tr>
+                    <tr>
+                        <td>Level 2</td>
+                        <td>Level 2</td>
+                        <td><input type="number" className='table-input' placeholder='Input response value'/></td>
+                    </tr>
+                </table>
+            </div>
             <h2>Anova Table</h2>
             <div style={{overflowX: "scroll"}}>
                 <table style={{minWidth: "700px"}}>
