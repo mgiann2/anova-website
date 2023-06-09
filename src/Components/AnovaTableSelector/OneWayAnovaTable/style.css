@@ -1,13 +1,20 @@
 table, th, td {
-    border: 1px solid rgb(var(--main-color-dark));
+    padding: 0;
     border-collapse: collapse;
+    border: 1px solid rgb(var(--main-color-dark));
     text-align: left;
     vertical-align: top;
     font-size: large;
 }
 
+th, td {
+    height: 1.5em;
+    background-color: rgb(var(--bg-light));
+    overflow: hidden;
+}
+
 th {
-    color: rgb(var(--main-color));    
+    color: rgb(var(--main-color));   
 }
 
 table {
@@ -45,15 +52,45 @@ input:focus {
 }
 
 .delete-row {
-    display: table-cell;
+    margin: 0;
+    padding: 0;
     background-color: rgb(255, 70, 70);
-    color: rgb(var(--bg-light));
     border: 0;
+    color: rgb(var(--bg-light));
     width: 100%;
-    height: 100%;
+    height: calc(100%);
 }
 
 .delete-row:hover {
     background-color: rgb(198, 63, 51);
     cursor: pointer;
+}
+
+.delete-row-td {
+    background-color: rgb(255, 70, 70);
+}
+
+.delete-row-td:hover {
+    background-color: rgb(198, 63, 51);
+}
+
+.anova-btn {
+    padding: 5px;
+    margin-top: 5px;
+    margin-right: 5px;
+    background-color: rgb(var(--bg-light));
+    border-radius: 5px;
+    color: rgb(var(--main-color));
+    border: 1px solid rgb(var(--main-color));
+    transition: 0.2s;
+}
+
+.anova-btn:hover {
+    background-color: rgb(var(--main-color));
+    color: rgb(var(--bg-light));
+}
+
+.anova-btn:active {
+    background-color: rgb(var(--main-color-dark));
+    border-color: rgb(var(--main-color-dark));
 }

@@ -15,14 +15,14 @@ function TwoWayAnovaTable() {
                         </tr>
                         <tr>
                             <td><input type="text" className='table-input' placeholder='Input level'/></td>
-                            <td><button className='delete-row'>X</button></td>
+                            <td className='delete-row-td'><button className='delete-row'>X</button></td>
                         </tr>
                         <tr>
                             <td><input type="text" className='table-input' placeholder='Input level'/></td>
-                            <td><button className='delete-row'>X</button></td>
+                            <td className='delete-row-td'><button className='delete-row'>X</button></td>
                         </tr>
                     </table>
-                    <button>Add Level</button>
+                    <button className='anova-btn'>Add Level</button>
                 </div>
                 <div>
                     <h3>Factor B Levels</h3>
@@ -33,14 +33,14 @@ function TwoWayAnovaTable() {
                         </tr>
                         <tr>
                             <td><input type="text" className='table-input' placeholder='Input level'/></td>
-                            <td><button className='delete-row'>X</button></td>
+                            <td className='delete-row-td'><button className='delete-row'>X</button></td>
                         </tr>
                         <tr>
                             <td><input type="text" className='table-input' placeholder='Input level'/></td>
-                            <td><button className='delete-row'>X</button></td>
+                            <td className='delete-row-td'><button className='delete-row'>X</button></td>
                         </tr>
                     </table>
-                    <button>Add Level</button>
+                    <button className='anova-btn'>Add Level</button>
                 </div>
             </div>
             <div>
@@ -72,7 +72,7 @@ function TwoWayAnovaTable() {
                         <td><input type="text" className='table-input' placeholder='Input # of observations'/></td>
                     </tr>
                 </table>
-                <button>Update Table</button>
+                <button className='anova-btn'>Update Table</button>
                 <p style={{color: "red"}}></p>
             </div>
             <h3>Response Data</h3>
