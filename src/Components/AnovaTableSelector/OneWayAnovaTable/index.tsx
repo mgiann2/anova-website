@@ -1,8 +1,13 @@
 import React from 'react';
 import './style.css';
-import { clamp } from '../../../Helpers/helper';
+import { OneWayAnovaData, clamp } from '../../../Helpers/helper';
 
-function OneWayAnovaTable() {
+interface OneWayProps {
+    data: OneWayAnovaData;
+    update;
+}
+
+function OneWayAnovaTable(props: {oneWay: OneWayProps}) {
 
     return (
         <>

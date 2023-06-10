@@ -2,9 +2,7 @@ import React, { useState, createContext } from 'react';
 import './style.css';
 import OneWayAnovaTable from './OneWayAnovaTable';
 import TwoWayAnovaTable from './TwoWayAnovaTable';
-
-const OneWayAnovaContext = createContext({});
-const TwoWayAnovaContext = createContext({});
+import { OneWayAnovaData, TwoWayAnovaData } from '../../Helpers/helper';
 
 enum TableState {
     OneWayAnova, 
@@ -13,20 +11,18 @@ enum TableState {
 
 function AnovaTableSelector() {
     let [currTable, updateCurrTable] = useState(TableState.OneWayAnova);
+    let [oneWayData, updateOneWayData] = useState(new OneWayAnovaData());
+    let [twoWayData, updateTwoWayData] = useState(new TwoWayAnovaData());
 
     function renderTable() {
         switch(currTable) {
             case TableState.OneWayAnova:
                 return (
-                    <OneWayAnovaContext.Provider value={{}}>
-                        <OneWayAnovaTable />
-                    </OneWayAnovaContext.Provider>
+                    <OneWayAnovaTable oneWay={{data: oneWayData, update: updateOneWayData}}/>
                 );
             case TableState.TwoWayAnova:
                 return (
-                    <TwoWayAnovaContext.Provider value={{}}>
-                        <TwoWayAnovaTable />
-                    </TwoWayAnovaContext.Provider>
+                    <TwoWayAnovaTable twoWay={{data: twoWayData, update: updateTwoWayData}}/>
                 );
         }
     }

@@ -1,7 +1,13 @@
 import React from 'react';
 import './style.css';
+import { TwoWayAnovaData } from '../../../Helpers/helper';
 
-function TwoWayAnovaTable() {
+interface TwoWayProps {
+    data: TwoWayAnovaData;
+    update;
+}
+
+function TwoWayAnovaTable(props: {twoWay: TwoWayProps}) {
     return (
         <>
             <h2>Data</h2>
