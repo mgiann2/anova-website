@@ -15,9 +15,19 @@ export function clamp(value: number, min: number, max: number) {
     }
 }
 
+export interface StateProps {
+    data;
+    update;
+}
+
 export interface OneWayTreatment {
     level: string;
     amount: number;
+}
+
+export interface OneWayObservation {
+    level: string;
+    value: number;
 }
 
 export interface TwoWayTreatment {
@@ -26,15 +36,8 @@ export interface TwoWayTreatment {
     amount: number;
 }
 
-export class OneWayAnovaData {
-    levels: string[];
-    treatments: OneWayTreatment[];
-    observations: Map<OneWayTreatment, number[]>;
-}
-
-export class TwoWayAnovaData {
-    factorALevels: string[];
-    factorBLevels: string[];
-    treatments: TwoWayTreatment[];
-    observations: Map<TwoWayTreatment, number[]>;
+export interface TwoWayObservation {
+    levelA: string;
+    levelB: string;
+    value: number;
 }
