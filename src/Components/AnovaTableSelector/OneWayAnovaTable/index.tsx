@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './style.css';
-import { OneWayTreatment, StateProps, clamp } from '../../../Helpers/helper';
+import { OneWayObservation, OneWayTreatment, StateProps, clamp } from '../../../Helpers/helper';
 
 function OneWayAnovaTable(props: {factorLevels: StateProps, responseData: StateProps, anovaData: StateProps}) {
+
     function addLevel() {
         let newFactorLevels: OneWayTreatment[] = [...props.factorLevels.data];
         newFactorLevels.push({level: "", amount: 1});
@@ -18,15 +19,38 @@ function OneWayAnovaTable(props: {factorLevels: StateProps, responseData: StateP
     function updateLevel(newLevel: string, index: number) {
         let newFactorLevels: OneWayTreatment[] = [...props.factorLevels.data];
         newFactorLevels[index].level = newLevel;
-        console.log(newFactorLevels);
         props.factorLevels.update(newFactorLevels);
     }
 
     function updateAmount(newAmount: number, index: number) {
         let newFactorLevels: OneWayTreatment[] = [...props.factorLevels.data];
         newFactorLevels[index].amount = Math.trunc(clamp(newAmount, 1, Number.MAX_SAFE_INTEGER));
-        console.log(newFactorLevels);
         props.factorLevels.update(newFactorLevels);
+    }
+
+    function updateResponseTable() {
+        // validate factor levels
+        let levels = [];
+        for(let i = 0; i < props.factorLevels.data.length; i++) {
+            let treatment: OneWayTreatment = props.factorLevels.data[i];
+            if (treatment.level === "") {
+                alert("Please ensure that each level is not blank");
+                return;
+            }
+            if (levels.includes(treatment.level)) {
+                alert("Please ensure that each level is unique");
+                return;
+            }
+            levels.push(treatment.level);
+        }
+
+        let newResponseData: OneWayObservation[] = [];
+        props.factorLevels.data.forEach(treatment => {
+            for(let i = 0; i < treatment.amount; i++) {
+                newResponseData.push({level: treatment.level, value: null})
+            }
+        })
+        props.responseData.update(newResponseData);
     }
 
     function renderFactorLevels() {
@@ -103,11 +127,10 @@ function OneWayAnovaTable(props: {factorLevels: StateProps, responseData: StateP
                     { renderFactorLevels() }
                 </table>
                 <button className='anova-btn' onClick={addLevel}>Add Level</button>
-                <button className='anova-btn'>Update Table</button>
-                <p style={{color: "red"}}></p>
+                <button className='anova-btn' onClick={updateResponseTable}>Update Table</button>
             </div>
             <h3>Response Data</h3>
-            <div style={{overflowY: "scroll"}}>
+            <div style={{overflowY: "scroll", maxHeight: "300px"}}>
                 <table>
                     <tr>
                         <th style={{width: "50%"}}>Factor Level</th>
