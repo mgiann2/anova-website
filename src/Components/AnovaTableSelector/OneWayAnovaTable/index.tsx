@@ -9,14 +9,34 @@ function OneWayAnovaTable(props: {factorLevels: StateProps, responseData: StateP
         props.factorLevels.update(newFactorLevels);
     }
 
+    function removeLevel(index: number) {
+        let newFactorLevels: OneWayTreatment[] = [...props.factorLevels.data];
+        newFactorLevels.splice(index, 1);
+        props.factorLevels.update(newFactorLevels);
+    }
+
+    function updateLevel(newLevel: string, index: number) {
+        let newFactorLevels: OneWayTreatment[] = [...props.factorLevels.data];
+        newFactorLevels[index].level = newLevel;
+        console.log(newFactorLevels);
+        props.factorLevels.update(newFactorLevels);
+    }
+
+    function updateAmount(newAmount: number, index: number) {
+        let newFactorLevels: OneWayTreatment[] = [...props.factorLevels.data];
+        newFactorLevels[index].amount = Math.trunc(clamp(newAmount, 1, Number.MAX_SAFE_INTEGER));
+        console.log(newFactorLevels);
+        props.factorLevels.update(newFactorLevels);
+    }
+
     function renderFactorLevels() {
         return (
             <>
-                {props.factorLevels.data.map(treatment => (
+                {props.factorLevels.data.map((treatment, index) => (
                     <tr>
-                        <td><input type="text" className='table-input' placeholder='Input level'/>{treatment.level}</td>
-                        <td><input type="number" className='table-input' placeholder='Input # of observations'/>{treatment.amount}</td>
-                        <td className='delete-row-td'><button className='delete-row'>X</button></td>
+                        <td><input type="text" className='table-input' placeholder='Input level' onChange={(e) => {updateLevel(e.target.value, index)}} value={treatment.level}/></td>
+                        <td><input type="number" className='table-input' placeholder='Input # of observations' onChange={(e) => {updateAmount(Number(e.target.value) , index)}} value={treatment.amount}/></td>
+                        <td className='delete-row-td' onClick={() => removeLevel(index)}><button className='delete-row'>X</button></td>
                     </tr>
                 ))}
             </>
