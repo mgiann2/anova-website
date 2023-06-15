@@ -1,9 +1,27 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './style.css';
-import { StateProps } from '../../../Helpers/helper';
+import { StateProps, TwoWayTreatment, clamp } from '../../../Helpers/helper';
 
 function TwoWayAnovaTable(props: {factorALevels: StateProps, factorBLevels: StateProps, treatments: StateProps, responseData: StateProps, anovaData: StateProps}) {
     
+    useEffect(() => {
+        let newTreatments: TwoWayTreatment[] = [];
+        let aLevels: string[] = [...new Set<string>(props.factorALevels.data)];
+        let bLevels: string[] = [...new Set<string>(props.factorBLevels.data)];
+        if (aLevels.includes("")) {aLevels.splice(aLevels.indexOf(""))}
+        if (bLevels.includes("")) {bLevels.splice(bLevels.indexOf(""))}
+
+        aLevels.forEach(aLvl => bLevels.forEach(bLvl => newTreatments.push({levelA: aLvl, levelB: bLvl, amount: 1})))
+
+        props.treatments.update(newTreatments)
+    }, [props.factorALevels.data, props.factorBLevels.data])
+
+    function addLevel(data: string[], update) {
+        let newLevels = [...data];
+        newLevels.push("");
+        update(newLevels);
+    }
+
     function renderFactorLevels(data: string[], update) {
         function removeLevel(index: number) {
             let newLevels = [...data];
@@ -29,10 +47,25 @@ function TwoWayAnovaTable(props: {factorALevels: StateProps, factorBLevels: Stat
         )
     }
 
-    function addLevel(data: string[], update) {
-        let newLevels = [...data];
-        newLevels.push("");
-        update(newLevels);
+    function renderTreatments() {
+        function updateAmount(amount: number, index: number) {
+            let newTreatments: TwoWayTreatment[] = [...props.treatments.data];
+            newTreatments[index].amount = Math.trunc(clamp(amount, 1, Number.MAX_SAFE_INTEGER));
+            props.treatments.update(newTreatments);
+        }
+
+        let treatments: TwoWayTreatment[] = props.treatments.data;
+        return (
+            <>
+                {treatments.map((treatment, index) => (
+                    <tr>
+                        <td>{treatment.levelA}</td>
+                        <td>{treatment.levelB}</td>
+                        <td><input type="number" className='table-input' placeholder='Input # of observations' onChange={e => updateAmount(Number(e.target.value), index)} value={treatment.amount}/></td>
+                    </tr>
+                ))}
+            </>
+        )
     }
     
     return (
@@ -70,77 +103,7 @@ function TwoWayAnovaTable(props: {factorALevels: StateProps, factorBLevels: Stat
                         <th style={{width: "30%"}}>Factor B Level</th>
                         <th style={{width: "40%"}}>Number of Observations</th>
                     </tr>
-                    <tr>
-                        <td>Level 1</td>
-                        <td>Level 1</td>
-                        <td><input type="text" className='table-input' placeholder='Input # of observations'/></td>
-                    </tr>
-                    <tr>
-                        <td>Level 1</td>
-                        <td>Level 2</td>
-                        <td><input type="text" className='table-input' placeholder='Input # of observations'/></td>
-                    </tr>
-                    <tr>
-                        <td>Level 2</td>
-                        <td>Level 1</td>
-                        <td><input type="text" className='table-input' placeholder='Input # of observations'/></td>
-                    </tr>
-                    <tr>
-                        <td>Level 2</td>
-                        <td>Level 2</td>
-                        <td><input type="text" className='table-input' placeholder='Input # of observations'/></td>
-                    </tr>
-                </table>
-                <button className='anova-btn'>Update Table</button>
-            </div>
-            <h3>Response Data</h3>
-            <div style={{overflowY: "scroll"}}>
-                <table>
-                    <tr>
-                        <th style={{width: "30%"}}>Factor A Level</th>
-                        <th style={{width: "30%"}}>Factor B Level</th>
-                        <th style={{width: "40%"}}>Response</th>
-                    </tr>
-                    <tr>
-                        <td>Level 1</td>
-                        <td>Level 1</td>
-                        <td><input type="number" className='table-input' placeholder='Input response value'/></td>
-                    </tr>
-                    <tr>
-                        <td>Level 1</td>
-                        <td>Level 1</td>
-                        <td><input type="number" className='table-input' placeholder='Input response value'/></td>
-                    </tr>
-                    <tr>
-                        <td>Level 1</td>
-                        <td>Level 2</td>
-                        <td><input type="number" className='table-input' placeholder='Input response value'/></td>
-                    </tr>
-                    <tr>
-                        <td>Level 1</td>
-                        <td>Level 2</td>
-                        <td><input type="number" className='table-input' placeholder='Input response value'/></td>
-                    </tr>
-                    <tr>
-                        <td>Level 2</td>
-                        <td>Level 1</td>
-                        <td><input type="number" className='table-input' placeholder='Input response value'/></td>
-                    </tr>
-                    <tr>
-                        <td>Level 2</td>
-                        <td>Level 1</td>
-                        <td><input type="number" className='table-input' placeholder='Input response value'/></td>
-                    </tr>
-                    <tr>
-                        <td>Level 2</td>
-                        <td>Level 2</td>
-                        <td><input type="number" className='table-input' placeholder='Input response value'/></td>
-                    </tr>
-                    <tr>
-                        <td>Level 2</td>
-                        <td>Level 2</td>
-                        <td><input type="number" className='table-input' placeholder='Input response value'/></td>
-                    </tr>
+                    { renderTreatments() }
                 </table>
             </div>
             <h2>Anova Table</h2>
