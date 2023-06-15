@@ -2,7 +2,7 @@ import React, { useState, createContext } from 'react';
 import './style.css';
 import OneWayAnovaTable from './OneWayAnovaTable';
 import TwoWayAnovaTable from './TwoWayAnovaTable';
-import { StateProps, OneWayTreatment, OneWayObservation } from '../../Helpers/helper';
+import { StateProps, OneWayTreatment, OneWayObservation, TwoWayTreatment, TwoWayObservation } from '../../Helpers/helper';
 
 enum TableState {
     OneWayAnova, 
@@ -16,6 +16,11 @@ function AnovaTableSelector() {
     let [responseDataOW, updateResponseDataOW] = useState([] as OneWayObservation[]);
     let [anovaDataOW, updateAnovaDataOW] = useState();
     // Two Way Anova State
+    let [factorALevelsTW, updateFactorALevelsTW] = useState([]);
+    let [factorBLevelsTW, updateFactorBLevelsTW] = useState([]);
+    let [treatmentsTW, updateTreatmentsTW] = useState([] as TwoWayTreatment[]);
+    let [responseDataTW, updateResponseDataTW] = useState([] as TwoWayObservation[]);
+    let [anovaDataTW, updateAnovaDataTW] = useState();
     
 
     function renderTable() {
@@ -26,7 +31,7 @@ function AnovaTableSelector() {
                 );
             case TableState.TwoWayAnova:
                 return (
-                    <TwoWayAnovaTable />
+                    <TwoWayAnovaTable factorALevels={{data: factorALevelsTW, update: updateFactorALevelsTW}} factorBLevels={{data: factorBLevelsTW, update: updateFactorBLevelsTW}} treatments={{data: treatmentsTW, update: updateTreatmentsTW}} responseData={{data: responseDataTW, update: updateResponseDataTW}} anovaData={{data: anovaDataTW, update: updateAnovaDataTW}}/>
                 );
         }
     }

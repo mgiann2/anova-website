@@ -2,7 +2,39 @@ import React from 'react';
 import './style.css';
 import { StateProps } from '../../../Helpers/helper';
 
-function TwoWayAnovaTable() {
+function TwoWayAnovaTable(props: {factorALevels: StateProps, factorBLevels: StateProps, treatments: StateProps, responseData: StateProps, anovaData: StateProps}) {
+    
+    function renderFactorLevels(data: string[], update) {
+        function removeLevel(index: number) {
+            let newLevels = [...data];
+            newLevels.splice(index, 1);
+            update(newLevels);
+        }
+
+        function updateLevel(value: string, index: number) {
+            let newLevels = [...data];
+            newLevels[index] = value;
+            update(newLevels);
+        }
+
+        return (
+            <>
+                {data.map((level, index) => (
+                    <tr>
+                        <td><input type="text" className='table-input' placeholder='Input level' onChange={e => updateLevel(e.target.value, index)} value={level}/></td>
+                        <td className='delete-row-td'><button className='delete-row' onClick={() => removeLevel(index)}>X</button></td>
+                    </tr>
+                ))}
+            </>
+        )
+    }
+
+    function addLevel(data: string[], update) {
+        let newLevels = [...data];
+        newLevels.push("");
+        update(newLevels);
+    }
+    
     return (
         <>
             <h2>Data</h2>
@@ -14,16 +46,9 @@ function TwoWayAnovaTable() {
                             <th style={{width: "90%"}}>Level</th>
                             <th style={{width: "10%"}}>Delete</th>
                         </tr>
-                        <tr>
-                            <td><input type="text" className='table-input' placeholder='Input level'/></td>
-                            <td className='delete-row-td'><button className='delete-row'>X</button></td>
-                        </tr>
-                        <tr>
-                            <td><input type="text" className='table-input' placeholder='Input level'/></td>
-                            <td className='delete-row-td'><button className='delete-row'>X</button></td>
-                        </tr>
+                        { renderFactorLevels(props.factorALevels.data, props.factorALevels.update) }
                     </table>
-                    <button className='anova-btn'>Add Level</button>
+                    <button className='anova-btn' onClick={() => addLevel(props.factorALevels.data, props.factorALevels.update)}>Add Level</button>
                 </div>
                 <div>
                     <h3>Factor B Levels</h3>
@@ -32,16 +57,9 @@ function TwoWayAnovaTable() {
                             <th style={{width: "90%"}}>Level</th>
                             <th style={{width: "10%"}}>Delete</th>
                         </tr>
-                        <tr>
-                            <td><input type="text" className='table-input' placeholder='Input level'/></td>
-                            <td className='delete-row-td'><button className='delete-row'>X</button></td>
-                        </tr>
-                        <tr>
-                            <td><input type="text" className='table-input' placeholder='Input level'/></td>
-                            <td className='delete-row-td'><button className='delete-row'>X</button></td>
-                        </tr>
+                        { renderFactorLevels(props.factorBLevels.data, props.factorBLevels.update) }
                     </table>
-                    <button className='anova-btn'>Add Level</button>
+                    <button className='anova-btn' onClick={() => addLevel(props.factorBLevels.data, props.factorBLevels.update)}>Add Level</button>
                 </div>
             </div>
             <div>
@@ -74,7 +92,6 @@ function TwoWayAnovaTable() {
                     </tr>
                 </table>
                 <button className='anova-btn'>Update Table</button>
-                <p style={{color: "red"}}></p>
             </div>
             <h3>Response Data</h3>
             <div style={{overflowY: "scroll"}}>
