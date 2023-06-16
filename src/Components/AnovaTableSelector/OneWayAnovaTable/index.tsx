@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './style.css';
-import { OneWayObservation, OneWayTreatment, StateProps, clamp } from '../../../Helpers/helper';
+import { OneWayAnova, OneWayObservation, OneWayTreatment, StateProps, clamp } from '../../../Helpers/helper';
 
 function OneWayAnovaTable(props: {factorLevels: StateProps, responseData: StateProps, anovaData: StateProps}) {
 
@@ -28,6 +28,12 @@ function OneWayAnovaTable(props: {factorLevels: StateProps, responseData: StateP
         props.factorLevels.update(newFactorLevels);
     }
 
+    function updateResponse(newValue: number, index: number) {
+        let newObservations: OneWayObservation[] = [...props.responseData.data];
+        newObservations[index].value = newValue;
+        props.responseData.update(newObservations);
+    }
+
     function updateResponseTable() {
         // validate factor levels
         let levels = [];
@@ -53,6 +59,57 @@ function OneWayAnovaTable(props: {factorLevels: StateProps, responseData: StateP
         props.responseData.update(newResponseData);
     }
 
+    function performAnovaTest() {
+        let responseData: OneWayObservation[] = props.responseData.data;
+        // validate responseData
+        for(let i = 0; i < responseData.length; i++) {
+            if(responseData[i].value === null) {
+                alert("Please ensure that each observation has a response value");
+                return;
+            }
+        }
+
+        // compute anova table values
+        // initialize all anova calculation variables
+        let grandMean = 0;
+        let a = 0;
+        let N = responseData.length;
+        let dfA;
+        let dfE;
+        let SSA = 0;
+        let SSE = 0;
+        
+        // setup data for computing SSA and SSE
+        let dataMap = new Map<string, number[]>();
+        responseData.forEach(obs => {
+            grandMean += obs.value;
+
+            if(dataMap.has(obs.level)) {
+                dataMap.get(obs.level).push(obs.value);
+            } else {
+                a++;
+                dataMap.set(obs.level, [obs.value]);
+            }
+        });
+        dfA = a - 1;
+        dfE = N - a;
+        grandMean /= N;
+
+        let sumSquareGroups = 0;
+        for(let level of dataMap.keys()) {
+            let groupMean = dataMap.get(level).reduce((acc, val) => acc + val, 0) / dataMap.get(level).length;
+            sumSquareGroups += dataMap.get(level).length * (groupMean ** 2);
+        }
+        let sumSquareAll = responseData.reduce((acc, obs) => acc + (obs.value ** 2), 0);
+        
+        // compute SSA and SSE
+        SSA = sumSquareGroups - N * (grandMean ** 2);
+        SSE = sumSquareAll - sumSquareGroups;
+
+        let newAnovaData = {dfA: dfA, dfE: dfE, SSA: SSA, SSE: SSE} as OneWayAnova;
+        props.anovaData.update(newAnovaData);
+    }
+
     function renderFactorLevels() {
         return (
             <>
@@ -70,10 +127,10 @@ function OneWayAnovaTable(props: {factorLevels: StateProps, responseData: StateP
     function renderResponseData() {
         return (
             <>
-                {props.responseData.data.map(obs => (
+                {props.responseData.data.map((obs, index) => (
                     <tr>
                         <td>{obs.level}</td>
-                        <td><input type="number" className='table-input' placeholder='Input response value'/>{obs.value}</td>
+                        <td><input type="number" className='table-input' placeholder='Input response value' value={obs.value} onChange={(e) => updateResponse(Number(e.target.value), index)}/></td>
                     </tr>
                 ))}
             </>
@@ -81,6 +138,40 @@ function OneWayAnovaTable(props: {factorLevels: StateProps, responseData: StateP
     }
 
     function renderAnovaTable() {
+        if (props.anovaData.data.dfA === null) {
+            return (
+                <table style={{minWidth: "700px"}}>
+                    <tr style={{height: "2em"}}>
+                        <th style={{width: "25%"}}>Source of Variation</th>
+                        <th style={{width: "15%"}}>df</th>
+                        <th style={{width: "20%"}}>SS</th>
+                        <th style={{width: "20%"}}>MS</th>
+                        <th style={{width: "20%"}}>F</th>
+                    </tr>
+                    <tr style={{height: "3em"}}>
+                        <th>Treatment/Between</th>
+                        <td>a-1</td>
+                        <td>SSA</td>
+                        <td>MSA</td>
+                        <td style={{borderBottom: "0"}}>MSA/MSE</td>
+                    </tr>
+                    <tr style={{height: "3em"}}>
+                        <th>Error/Within</th>
+                        <td>N-a</td>
+                        <td>SSE</td>
+                        <td>MSE</td>
+                        <td style={{borderTop: "0"}}></td>
+                    </tr>
+                    <tr style={{height: "2em"}}>
+                        <th>Total</th>
+                        <td>N-1</td>
+                        <td>SST</td>
+                    </tr>
+                </table>
+            )
+        }
+
+        let data: OneWayAnova = props.anovaData.data;
         return (
             <table style={{minWidth: "700px"}}>
                 <tr style={{height: "2em"}}>
@@ -92,22 +183,22 @@ function OneWayAnovaTable(props: {factorLevels: StateProps, responseData: StateP
                 </tr>
                 <tr style={{height: "3em"}}>
                     <th>Treatment/Between</th>
-                    <td>a-1</td>
-                    <td>SSA</td>
-                    <td>MSA</td>
-                    <td style={{borderBottom: "0"}}>MSA/MSE</td>
+                    <td>{data.dfA}</td>
+                    <td>{data.SSA}</td>
+                    <td>{data.SSA / data.dfA}</td>
+                    <td style={{borderBottom: "0"}}>{((data.SSA / data.dfA) / (data.SSE / data.dfE)).toFixed(2)}</td>
                 </tr>
                 <tr style={{height: "3em"}}>
                     <th>Error/Within</th>
-                    <td>N-a</td>
-                    <td>SSE</td>
-                    <td>MSE</td>
+                    <td>{data.dfE}</td>
+                    <td>{data.SSE}</td>
+                    <td>{data.SSE / data.dfE}</td>
                     <td style={{borderTop: "0"}}></td>
                 </tr>
                 <tr style={{height: "2em"}}>
                     <th>Total</th>
-                    <td>N-1</td>
-                    <td>SST</td>
+                    <td>{data.dfA + data.dfE}</td>
+                    <td>{data.SSA + data.SSE}</td>
                 </tr>
             </table>
         )
@@ -138,11 +229,13 @@ function OneWayAnovaTable(props: {factorLevels: StateProps, responseData: StateP
                     </tr>
                     { renderResponseData() }
                 </table>
+                <button className='anova-btn' onClick={performAnovaTest}>Perform Anova Test</button>
             </div>
             <h2>Anova Table</h2>
             <div style={{overflowX: "scroll"}}>
                 { renderAnovaTable() }
             </div>
+            <p></p>
         </>
     );   
 }

@@ -139,7 +139,7 @@ function TwoWayAnovaTable(props: {factorALevels: StateProps, factorBLevels: Stat
                     </tr>
                     <tr style={{height: "3em"}}>
                         <th>Error</th>
-                        <td>N-a</td>
+                        <td>N-ab</td>
                         <td>SSE</td>
                         <td>MSE</td>
                         <td style={{border: "0"}}></td>

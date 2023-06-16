@@ -1,3 +1,5 @@
+const jsstats = require('js-stats');
+
 /**
  * 
  * @param value the value to clamp
@@ -40,4 +42,27 @@ export interface TwoWayObservation {
     levelA: string;
     levelB: string;
     value: number;
+}
+
+export interface OneWayAnova {
+    dfA: number;
+    dfE: number;
+    SSA: number;
+    SSE: number;
+}
+
+export interface TwoWayAnova {
+    dfA: number;
+    dfB: number;
+    dfAB: number;
+    dfE: number;
+    SSA: number;
+    SSB: number;
+    SSAB: number;
+    SSE: number;
+}
+
+export function pf(q: number, df1: number, df2: number) {
+    let fdist = new jsstats.FDistribution(df1, df2);
+    return 1 - fdist.cumulativeProbability(q);
 }
