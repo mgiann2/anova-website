@@ -1,4 +1,9 @@
-const jsstats = require('js-stats');
+var F = require( '@stdlib/stats-base-dists-f' ).F;
+
+export function pf(q: any, df1: any, df2: any) {
+    let fdist = new F(df1, df2);
+    return 1 - fdist.cdf(q);
+}
 
 /**
  * 
@@ -18,7 +23,7 @@ export function clamp(value: number, min: number, max: number) {
 }
 
 export interface StateProps {
-    data;
+    data: any;
     update;
 }
 
@@ -60,9 +65,4 @@ export interface TwoWayAnova {
     SSB: number;
     SSAB: number;
     SSE: number;
-}
-
-export function pf(q: number, df1: number, df2: number) {
-    let fdist = new jsstats.FDistribution(df1, df2);
-    return 1 - fdist.cumulativeProbability(q);
 }

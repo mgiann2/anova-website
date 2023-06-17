@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
 import './style.css';
-import { OneWayAnova, OneWayObservation, OneWayTreatment, StateProps, clamp } from '../../../Helpers/helper';
+import { OneWayAnova, OneWayObservation, OneWayTreatment, StateProps, clamp, pf } from '../../../Helpers/helper';
 
 function OneWayAnovaTable(props: {factorLevels: StateProps, responseData: StateProps, anovaData: StateProps}) {
+    let [signifLevel, updateSignifLevel] = useState(0.05);
+
+    function setSignifLevel(value: string) {
+        updateSignifLevel(clamp(Number(value), 0.0001, 0.9999));
+    }
 
     function addLevel() {
         let newFactorLevels: OneWayTreatment[] = [...props.factorLevels.data];
@@ -57,6 +62,7 @@ function OneWayAnovaTable(props: {factorLevels: StateProps, responseData: StateP
             }
         })
         props.responseData.update(newResponseData);
+        props.anovaData.update({dfA: null, dfE: null, SSA: null, SSE: null} as OneWayAnova)
     }
 
     function performAnovaTest() {
@@ -204,9 +210,25 @@ function OneWayAnovaTable(props: {factorLevels: StateProps, responseData: StateP
         )
     }
 
+    function getConclusion() {
+        if (props.anovaData.data.dfA === null) {
+            return "";
+        }
+        let data: OneWayAnova = props.anovaData.data;
+        let F = (data.SSA / data.dfA) / (data.SSE / data.dfE);
+        let pValue = pf(F, data.dfA, data.dfE);
+
+        if (pValue > signifLevel){
+            return `Since the p-value (${pValue.toFixed(3)}) is greater than the significance level (${signifLevel}), we fail to reject the null hypotheis that the means of each treatment are equal.`
+        }
+        return `Since the p-value (${pValue.toFixed(3)}) is less than the significance level (${signifLevel}), we reject the null hypotheis and conclude that the means of each treatment are not equal.`;
+    }
+
     return (
         <>
             <h2>Data</h2>
+            <label htmlFor="">Significance Level</label>
+            <input type="number" step={0.001} min={0.001} max={0.999} name="Significance Level" id="signifLevel" value={signifLevel} onChange={(e) => setSignifLevel(e.target.value)}/>
             <h3>Factor Levels</h3>
             <div>
                 <table>
@@ -235,7 +257,8 @@ function OneWayAnovaTable(props: {factorLevels: StateProps, responseData: StateP
             <div style={{overflowX: "scroll"}}>
                 { renderAnovaTable() }
             </div>
-            <p></p>
+            <h3>Conclusion</h3>
+            <p>{ getConclusion() }</p>
         </>
     );   
 }
