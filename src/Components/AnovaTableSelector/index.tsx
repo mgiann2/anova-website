@@ -2,7 +2,7 @@ import React, { useState, createContext } from 'react';
 import './style.css';
 import OneWayAnovaTable from './OneWayAnovaTable';
 import TwoWayAnovaTable from './TwoWayAnovaTable';
-import { StateProps, OneWayTreatment, OneWayObservation, TwoWayTreatment, TwoWayObservation, OneWayAnova } from '../../Helpers/helper';
+import { StateProps, OneWayTreatment, OneWayObservation, TwoWayTreatment, TwoWayObservation, OneWayAnova, TwoWayAnova } from '../../Helpers/helper';
 
 enum TableState {
     OneWayAnova, 
@@ -20,7 +20,7 @@ function AnovaTableSelector() {
     let [factorBLevelsTW, updateFactorBLevelsTW] = useState([]);
     let [treatmentsTW, updateTreatmentsTW] = useState([] as TwoWayTreatment[]);
     let [responseDataTW, updateResponseDataTW] = useState([] as TwoWayObservation[]);
-    let [anovaDataTW, updateAnovaDataTW] = useState();
+    let [anovaDataTW, updateAnovaDataTW] = useState({dfA: null, dfB: null, dfAB: null, dfE: null, SSA: null, SSB: null, SSAB: null, SSE: null} as TwoWayAnova);
     
 
     function renderTable() {
