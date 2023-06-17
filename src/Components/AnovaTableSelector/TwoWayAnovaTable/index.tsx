@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import './style.css';
-import { StateProps, TwoWayTreatment, clamp } from '../../../Helpers/helper';
+import { StateProps, TwoWayAnova, TwoWayObservation, TwoWayTreatment, clamp } from '../../../Helpers/helper';
 
 function TwoWayAnovaTable(props: {factorALevels: StateProps, factorBLevels: StateProps, treatments: StateProps, responseData: StateProps, anovaData: StateProps}) {
     
@@ -20,6 +20,23 @@ function TwoWayAnovaTable(props: {factorALevels: StateProps, factorBLevels: Stat
         let newLevels = [...data];
         newLevels.push("");
         update(newLevels);
+    }
+
+    function updateResponse(newValue: number, index: number) {
+        let newObservations: TwoWayObservation[] = [...props.responseData.data];
+        newObservations[index].value = newValue;
+        props.responseData.update(newObservations);
+    }
+
+    function updateResponseTable() {
+        let newResponseData: TwoWayObservation[] = [];
+        props.treatments.data.forEach(treatment => {
+            for(let i = 0; i < treatment.amount; i++) {
+                newResponseData.push({levelA: treatment.levelA, levelB: treatment.levelB, value: null})
+            }
+        })
+        props.responseData.update(newResponseData);
+        props.anovaData.update({dfA: null, dfB: null, dfAB: null, dfE: null, SSA: null, SSB: null, SSAB: null, SSE: null} as TwoWayAnova)
     }
 
     function renderFactorLevels(data: string[], update) {
@@ -67,6 +84,24 @@ function TwoWayAnovaTable(props: {factorALevels: StateProps, factorBLevels: Stat
             </>
         )
     }
+
+    function renderResponseData() {
+        return (
+            <>
+                {props.responseData.data.map((obs: TwoWayObservation, index) => (
+                    <tr>
+                        <td>{obs.levelA}</td>
+                        <td>{obs.levelB}</td>
+                        <td><input type="number" className='table-input' placeholder='Input response value' value={obs.value} onChange={(e) => updateResponse(Number(e.target.value), index)}/></td>
+                    </tr>
+                ))}
+            </>
+        )
+    }
+
+    function performAnovaTest() {
+        return;
+    }
     
     return (
         <>
@@ -105,6 +140,19 @@ function TwoWayAnovaTable(props: {factorALevels: StateProps, factorBLevels: Stat
                     </tr>
                     { renderTreatments() }
                 </table>
+                <button className='anova-btn' onClick={updateResponseTable}>Update Table</button>
+            </div>
+            <h3>Response Data</h3>
+            <div style={{overflowY: "scroll", maxHeight: "300px"}}>
+                <table>
+                    <tr>
+                        <th style={{width: "30%"}}>Factor A Level</th>
+                        <th style={{width: "30%"}}>Factor B Level</th>
+                        <th style={{width: "40%"}}>Response</th>
+                    </tr>
+                    { renderResponseData() }
+                </table>
+                <button className='anova-btn' onClick={performAnovaTest}>Perform Anova Test</button>
             </div>
             <h2>Anova Table</h2>
             <div style={{overflowX: "scroll"}}>
