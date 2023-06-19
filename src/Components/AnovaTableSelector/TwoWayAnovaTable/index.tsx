@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import './style.css';
-import { StateProps, TwoWayAnova, TwoWayObservation, TwoWayTreatment, clamp } from '../../../Helpers/helper';
+import { StateProps, TwoWayAnova, TwoWayObservation, TwoWayTreatment, clamp, pf } from '../../../Helpers/helper';
 
 function TwoWayAnovaTable(props: {factorALevels: StateProps, factorBLevels: StateProps, treatments: StateProps, responseData: StateProps, anovaData: StateProps}) {
-    
+    let [signifLevel, updateSignifLevel] = useState(0.05);
+
     useEffect(() => {
         let newTreatments: TwoWayTreatment[] = [];
         let aLevels: string[] = [...new Set<string>(props.factorALevels.data)];
@@ -15,6 +16,10 @@ function TwoWayAnovaTable(props: {factorALevels: StateProps, factorBLevels: Stat
 
         props.treatments.update(newTreatments)
     }, [props.factorALevels.data, props.factorBLevels.data])
+
+    function setSignifLevel(value: string) {
+        updateSignifLevel(clamp(Number(value), 0.0001, 0.9999));
+    }
 
     function addLevel(data: string[], update) {
         let newLevels = [...data];
@@ -304,10 +309,52 @@ function TwoWayAnovaTable(props: {factorALevels: StateProps, factorBLevels: Stat
                 </table>
         )
     }
+
+    function getConclusions(): string[] {
+        if (props.anovaData.data.dfA === null) {
+            return [];
+        }
+        let conclusions = [];
+        let data: TwoWayAnova = props.anovaData.data;
+
+        // make conclusion about Factor A
+        let F = (data.SSA / data.dfA) / (data.SSE / data.dfE);
+        let pValue = pf(F, data.dfA, data.dfE);
+
+        if (pValue > signifLevel){
+            conclusions.push(`Since the p-value (${pValue.toFixed(3)}) is greater than the significance level (${signifLevel}), we fail to reject the null hypotheis that the main effects of each level of factor A are equal. Hence, factor A does not have an effect on the response variable.`);
+        } else {
+            conclusions.push(`Since the p-value (${pValue.toFixed(3)}) is less than the significance level (${signifLevel}), we reject the null hypotheis and conclude that the main effects of each level of factor A are not equal. Hence, factor A has an effect on the response variable.`);
+        }
+
+        // make conclusion about Factor B
+        F = (data.SSB / data.dfB) / (data.SSE / data.dfE);
+        pValue = pf(F, data.dfB, data.dfE);
+
+        if (pValue > signifLevel){
+            conclusions.push(`Since the p-value (${pValue.toFixed(3)}) is greater than the significance level (${signifLevel}), we fail to reject the null hypotheis that the main effects of each level of factor B are equal. Hence, factor B does not have an effect on the response variable.`);
+        } else{
+            conclusions.push(`Since the p-value (${pValue.toFixed(3)}) is less than the significance level (${signifLevel}), we reject the null hypotheis and conclude that the main effects of each level of factor B are not equal. Hence, factor B has an effect on the response variable.`);
+        }
+
+        // make conclusion about treatment
+        F = (data.SSAB / data.dfAB) / (data.SSE / data.dfE);
+        pValue = pf(F, data.dfAB, data.dfE);
+
+        if (pValue > signifLevel){
+            conclusions.push(`Since the p-value (${pValue.toFixed(3)}) is greater than the significance level (${signifLevel}), we fail to reject the null hypotheis that all the interaction effects are equal to 0. Hence, there is no interaction effect.`);
+        } else {
+            conclusions.push(`Since the p-value (${pValue.toFixed(3)}) is less than the significance level (${signifLevel}), we reject the null hypotheis and conclude that at least one interaction effect is not equal to 0. Hence, there is an interaction effect.`);
+        }
+        
+        return conclusions;
+    }
     
     return (
         <>
             <h2>Data</h2>
+            <label htmlFor="">Significance Level</label>
+            <input type="number" step={0.001} min={0.001} max={0.999} name="Significance Level" id="signifLevel" value={signifLevel} onChange={(e) => setSignifLevel(e.target.value)}/>
             <div className='factor-tables'>
                 <div>
                     <h3>Factor A Levels</h3>
@@ -360,7 +407,10 @@ function TwoWayAnovaTable(props: {factorALevels: StateProps, factorBLevels: Stat
             <div style={{overflowX: "scroll"}}>
                 { renderAnovaTable() }
             </div>
-            
+            <h3>Conclusions</h3>
+            { getConclusions().map(conclusion => (
+                <p>{conclusion}</p>
+            ))}
         </>
     );   
 }
