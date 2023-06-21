@@ -349,6 +349,43 @@ function TwoWayAnovaTable(props: {factorALevels: StateProps, factorBLevels: Stat
 
         return conclusions;
     }
+
+    function importFile(e: React.ChangeEvent<HTMLInputElement>) {
+        let updateData = props.responseData.update;
+        if (e.target.files.length === 0) {return}
+
+        try {
+            let file = e.target.files[0];
+            let reader = new FileReader();
+    
+            reader.onload = (e: ProgressEvent<FileReader>) => {
+                try {
+                    const contents = e.target?.result as string;
+    
+                let lines = contents.split("\n");
+                lines = lines.filter(line => line !== "");
+                let data = lines.map(x => x.split(","));
+                let newObservations = data.map(obs => {
+                    if (isNaN(Number(obs[2]))) { throw new Error("Not a number") }
+                    if (obs[0] === "") { throw new Error("Level cannot be blank")}
+                    if (obs[1] === "") { throw new Error("Level cannot be blank")}
+
+                    return {levelA: obs[0], levelB: obs[1], value: Number(obs[2])} as TwoWayObservation
+                });
+
+                updateData(newObservations);
+                } catch (error) {
+                    alert("There was an error reading the file. Please ensure the file follows the correct format.");
+                }
+            }
+    
+            reader.readAsText(file);  
+        } catch (error) {
+            alert("There was an error reading the file. Please ensure the file follows the correct format.")
+        }
+        
+        e.target.value = null;
+    }
     
     return (
         <>
@@ -393,7 +430,7 @@ function TwoWayAnovaTable(props: {factorALevels: StateProps, factorBLevels: Stat
             </div>
             <h3>Response Data</h3>
             <label htmlFor="dataFile">Import csv file</label>
-            <input type="file" accept=".csv" name="Data File" id="dataFile" />
+            <input type="file" accept=".csv" name="Data File" id="dataFile" onChange={e => importFile(e)}/>
             <p style={{margin: "0.5em 0 1em 0", fontSize:"small", color:"orange"}}>* The uploaded csv file will only be accepted if it follows the same format as the table below. Do not include any header rows in the csv file.</p>
             <div style={{overflowY: "scroll", maxHeight: "300px"}}>
                 <table>
