@@ -346,7 +346,7 @@ function TwoWayAnovaTable(props: {factorALevels: StateProps, factorBLevels: Stat
         } else {
             conclusions.push(`Since the p-value (${pValue.toFixed(3)}) is less than the significance level (${signifLevel}), we reject the null hypotheis and conclude that at least one interaction effect is not equal to 0. Hence, there is an interaction effect.`);
         }
-        
+
         return conclusions;
     }
     
@@ -392,6 +392,9 @@ function TwoWayAnovaTable(props: {factorALevels: StateProps, factorBLevels: Stat
                 <button className='anova-btn' onClick={updateResponseTable}>Update Table</button>
             </div>
             <h3>Response Data</h3>
+            <label htmlFor="dataFile">Import csv file</label>
+            <input type="file" accept=".csv" name="Data File" id="dataFile" />
+            <p style={{margin: "0.5em 0 1em 0", fontSize:"small", color:"orange"}}>* The uploaded csv file will only be accepted if it follows the same format as the table below. Do not include any header rows in the csv file.</p>
             <div style={{overflowY: "scroll", maxHeight: "300px"}}>
                 <table>
                     <tr>

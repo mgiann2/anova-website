@@ -227,7 +227,7 @@ function OneWayAnovaTable(props: {factorLevels: StateProps, responseData: StateP
     return (
         <>
             <h2>Data</h2>
-            <label htmlFor="">Significance Level</label>
+            <label htmlFor="signifLevel">Significance Level</label>
             <input type="number" step={0.001} min={0.001} max={0.999} name="Significance Level" id="signifLevel" value={signifLevel} onChange={(e) => setSignifLevel(e.target.value)}/>
             <h3>Factor Levels</h3>
             <div>
@@ -243,6 +243,9 @@ function OneWayAnovaTable(props: {factorLevels: StateProps, responseData: StateP
                 <button className='anova-btn' onClick={updateResponseTable}>Update Table</button>
             </div>
             <h3>Response Data</h3>
+            <label htmlFor="dataFile">Import csv file</label>
+            <input type="file" accept=".csv" name="Data File" id="dataFile" />
+            <p style={{margin: "0.5em 0 1em 0", fontSize:"small", color:"orange"}}>* The uploaded csv file will only be accepted if it follows the same format as the table below. Do not include any header rows in the csv file.</p>
             <div style={{overflowY: "scroll", maxHeight: "300px"}}>
                 <table>
                     <tr>
