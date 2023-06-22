@@ -190,21 +190,21 @@ function OneWayAnovaTable(props: {factorLevels: StateProps, responseData: StateP
                 <tr style={{height: "3em"}}>
                     <th>Treatment/Between</th>
                     <td>{data.dfA}</td>
-                    <td>{data.SSA}</td>
-                    <td>{data.SSA / data.dfA}</td>
+                    <td>{(data.SSA).toFixed(2)}</td>
+                    <td>{(data.SSA / data.dfA).toFixed(2)}</td>
                     <td style={{borderBottom: "0"}}>{((data.SSA / data.dfA) / (data.SSE / data.dfE)).toFixed(2)}</td>
                 </tr>
                 <tr style={{height: "3em"}}>
                     <th>Error/Within</th>
                     <td>{data.dfE}</td>
-                    <td>{data.SSE}</td>
-                    <td>{data.SSE / data.dfE}</td>
+                    <td>{(data.SSE).toFixed(2)}</td>
+                    <td>{(data.SSE / data.dfE).toFixed(2)}</td>
                     <td style={{borderTop: "0"}}></td>
                 </tr>
                 <tr style={{height: "2em"}}>
                     <th>Total</th>
                     <td>{data.dfA + data.dfE}</td>
-                    <td>{data.SSA + data.SSE}</td>
+                    <td>{(data.SSA + data.SSE).toFixed(2)}</td>
                 </tr>
             </table>
         )
@@ -219,9 +219,9 @@ function OneWayAnovaTable(props: {factorLevels: StateProps, responseData: StateP
         let pValue = pf(F, data.dfA, data.dfE);
 
         if (pValue > signifLevel){
-            return `Since the p-value (${pValue.toFixed(3)}) is greater than the significance level (${signifLevel}), we fail to reject the null hypotheis that the means of each treatment are equal.`
+            return `Since the p-value (${pValue.toFixed(6)}) is greater than the significance level (${signifLevel}), we fail to reject the null hypotheis that the means of each treatment are equal.`
         }
-        return `Since the p-value (${pValue.toFixed(3)}) is less than the significance level (${signifLevel}), we reject the null hypotheis and conclude that the means of each treatment are not equal.`;
+        return `Since the p-value (${pValue.toFixed(6)}) is less than the significance level (${signifLevel}), we reject the null hypotheis and conclude that the means of each treatment are not equal.`;
     }
 
     function importFile(e: React.ChangeEvent<HTMLInputElement>) {

@@ -276,35 +276,35 @@ function TwoWayAnovaTable(props: {factorALevels: StateProps, factorBLevels: Stat
                     <tr style={{height: "2em"}}>
                         <th>Factor A</th>
                         <td>{data.dfA}</td>
-                        <td>{data.SSA}</td>
-                        <td>{data.SSA / data.dfA}</td>
-                        <td style={{borderBottom: "0"}}>{(data.SSA / data.dfA) / (data.SSE / data.dfE)}</td>
+                        <td>{(data.SSA).toFixed(2)}</td>
+                        <td>{(data.SSA / data.dfA).toFixed(2)}</td>
+                        <td style={{borderBottom: "0"}}>{((data.SSA / data.dfA) / (data.SSE / data.dfE)).toFixed(2)}</td>
                     </tr>
                     <tr style={{height: "2em"}}>
                         <th>Factor B</th>
                         <td>{data.dfB}</td>
-                        <td>{data.SSB}</td>
-                        <td>{data.SSB / data.dfB}</td>
-                        <td style={{borderBottom: "0"}}>{(data.SSB / data.dfB) / (data.SSE / data.dfE)}</td>
+                        <td>{(data.SSB).toFixed(2)}</td>
+                        <td>{(data.SSB / data.dfB).toFixed(2)}</td>
+                        <td style={{borderBottom: "0"}}>{((data.SSB / data.dfB) / (data.SSE / data.dfE)).toFixed(2)}</td>
                     </tr>
                     <tr style={{height: "2em"}}>
                         <th>Interaction</th>
                         <td>{data.dfA * data.dfB}</td>
-                        <td>{data.SSAB}</td>
-                        <td>{data.SSAB / (data.dfA * data.dfB)}</td>
-                        <td>{(data.SSAB / (data.dfA * data.dfB)) / (data.SSE / data.dfE)}</td>
+                        <td>{(data.SSAB).toFixed(2)}</td>
+                        <td>{(data.SSAB / (data.dfA * data.dfB)).toFixed(2)}</td>
+                        <td>{((data.SSAB / (data.dfA * data.dfB)) / (data.SSE / data.dfE)).toFixed(2)}</td>
                     </tr>
                     <tr style={{height: "3em"}}>
                         <th>Error</th>
                         <td>{data.dfE}</td>
-                        <td>{data.SSE}</td>
-                        <td>{data.SSE / data.dfE}</td>
+                        <td>{(data.SSE).toFixed(2)}</td>
+                        <td>{(data.SSE / data.dfE).toFixed(2)}</td>
                         <td style={{border: "0"}}></td>
                     </tr>
                     <tr style={{height: "2em"}}>
                         <th>Total</th>
                         <td>{data.dfE + data.dfA + data.dfB + data.dfAB}</td>
-                        <td>{data.SSA + data.SSB + data.SSAB + data.SSE}</td>
+                        <td>{(data.SSA + data.SSB + data.SSAB + data.SSE).toFixed(2)}</td>
                     </tr>
                 </table>
         )
@@ -322,9 +322,9 @@ function TwoWayAnovaTable(props: {factorALevels: StateProps, factorBLevels: Stat
         let pValue = pf(F, data.dfA, data.dfE);
 
         if (pValue > signifLevel){
-            conclusions.push(`Since the p-value (${pValue.toFixed(3)}) is greater than the significance level (${signifLevel}), we fail to reject the null hypotheis that the main effects of each level of factor A are equal. Hence, factor A does not have an effect on the response variable.`);
+            conclusions.push(`Since the p-value (${pValue.toFixed(6)}) is greater than the significance level (${signifLevel}), we fail to reject the null hypotheis that the main effects of each level of factor A are equal. Hence, factor A does not have an effect on the response variable.`);
         } else {
-            conclusions.push(`Since the p-value (${pValue.toFixed(3)}) is less than the significance level (${signifLevel}), we reject the null hypotheis and conclude that the main effects of each level of factor A are not equal. Hence, factor A has an effect on the response variable.`);
+            conclusions.push(`Since the p-value (${pValue.toFixed(6)}) is less than the significance level (${signifLevel}), we reject the null hypotheis and conclude that the main effects of each level of factor A are not equal. Hence, factor A has an effect on the response variable.`);
         }
 
         // make conclusion about Factor B
@@ -332,9 +332,9 @@ function TwoWayAnovaTable(props: {factorALevels: StateProps, factorBLevels: Stat
         pValue = pf(F, data.dfB, data.dfE);
 
         if (pValue > signifLevel){
-            conclusions.push(`Since the p-value (${pValue.toFixed(3)}) is greater than the significance level (${signifLevel}), we fail to reject the null hypotheis that the main effects of each level of factor B are equal. Hence, factor B does not have an effect on the response variable.`);
+            conclusions.push(`Since the p-value (${pValue.toFixed(6)}) is greater than the significance level (${signifLevel}), we fail to reject the null hypotheis that the main effects of each level of factor B are equal. Hence, factor B does not have an effect on the response variable.`);
         } else{
-            conclusions.push(`Since the p-value (${pValue.toFixed(3)}) is less than the significance level (${signifLevel}), we reject the null hypotheis and conclude that the main effects of each level of factor B are not equal. Hence, factor B has an effect on the response variable.`);
+            conclusions.push(`Since the p-value (${pValue.toFixed(6)}) is less than the significance level (${signifLevel}), we reject the null hypotheis and conclude that the main effects of each level of factor B are not equal. Hence, factor B has an effect on the response variable.`);
         }
 
         // make conclusion about treatment
@@ -342,9 +342,9 @@ function TwoWayAnovaTable(props: {factorALevels: StateProps, factorBLevels: Stat
         pValue = pf(F, data.dfAB, data.dfE);
 
         if (pValue > signifLevel){
-            conclusions.push(`Since the p-value (${pValue.toFixed(3)}) is greater than the significance level (${signifLevel}), we fail to reject the null hypotheis that all the interaction effects are equal to 0. Hence, there is no interaction effect.`);
+            conclusions.push(`Since the p-value (${pValue.toFixed(6)}) is greater than the significance level (${signifLevel}), we fail to reject the null hypotheis that all the interaction effects are equal to 0. Hence, there is no interaction effect.`);
         } else {
-            conclusions.push(`Since the p-value (${pValue.toFixed(3)}) is less than the significance level (${signifLevel}), we reject the null hypotheis and conclude that at least one interaction effect is not equal to 0. Hence, there is an interaction effect.`);
+            conclusions.push(`Since the p-value (${pValue.toFixed(6)}) is less than the significance level (${signifLevel}), we reject the null hypotheis and conclude that at least one interaction effect is not equal to 0. Hence, there is an interaction effect.`);
         }
 
         return conclusions;
