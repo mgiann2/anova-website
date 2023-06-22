@@ -290,8 +290,8 @@ function OneWayAnovaTable(props: {factorLevels: StateProps, responseData: StateP
                     </tr>
                     { renderResponseData() }
                 </table>
-                <button className='anova-btn' onClick={performAnovaTest}>Perform Anova Test</button>
             </div>
+            <button className='anova-btn' onClick={performAnovaTest}>Perform Anova Test</button>
             <h2>Anova Table</h2>
             <div style={{overflowX: "scroll"}}>
                 { renderAnovaTable() }
