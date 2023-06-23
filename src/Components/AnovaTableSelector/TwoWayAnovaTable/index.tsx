@@ -50,6 +50,12 @@ function TwoWayAnovaTable(props: {factorALevels: StateProps, factorBLevels: Stat
                 newResponseData.push({levelA: treatment.levelA, levelB: treatment.levelB, value: null})
             }
         })
+
+        if (newResponseData.length - aLevels.length * bLevels.length <= 0) {
+            alert("There must be more observations than treatments to perform an anova test");
+            return;
+        }
+
         props.responseData.update(newResponseData);
         props.anovaData.update({dfA: null, dfB: null, dfAB: null, dfE: null, SSA: null, SSB: null, SSAB: null, SSE: null} as TwoWayAnova)
     }

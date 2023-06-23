@@ -42,8 +42,10 @@ function OneWayAnovaTable(props: {factorLevels: StateProps, responseData: StateP
     function updateResponseTable() {
         // validate factor levels
         let levels = [];
+        let N = 0;
         for(let i = 0; i < props.factorLevels.data.length; i++) {
             let treatment: OneWayTreatment = props.factorLevels.data[i];
+            N += treatment.amount;
             if (treatment.level === "") {
                 alert("Please ensure that each level is not blank");
                 return;
@@ -56,6 +58,10 @@ function OneWayAnovaTable(props: {factorLevels: StateProps, responseData: StateP
         }
         if (levels.length < 2) {
             alert("There must be at least two levels to perform an anova test");
+            return;
+        }
+        if (N - levels.length <= 0) {
+            alert("There must be more observations than levels to perform an anova test");
             return;
         }
 
