@@ -54,6 +54,10 @@ function OneWayAnovaTable(props: {factorLevels: StateProps, responseData: StateP
             }
             levels.push(treatment.level);
         }
+        if (levels.length < 2) {
+            alert("There must be at least two levels to perform an anova test");
+            return;
+        }
 
         let newResponseData: OneWayObservation[] = [];
         props.factorLevels.data.forEach(treatment => {
@@ -99,6 +103,8 @@ function OneWayAnovaTable(props: {factorLevels: StateProps, responseData: StateP
         });
         dfA = a - 1;
         dfE = N - a;
+        console.log(dfA);
+        console.log(dfE)
         grandMean /= N;
 
         let sumSquareGroups = 0;

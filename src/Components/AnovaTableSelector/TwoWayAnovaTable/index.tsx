@@ -34,6 +34,16 @@ function TwoWayAnovaTable(props: {factorALevels: StateProps, factorBLevels: Stat
     }
 
     function updateResponseTable() {
+        let aLevels: string[] = [...new Set<string>(props.factorALevels.data)];
+        let bLevels: string[] = [...new Set<string>(props.factorBLevels.data)];
+        if (aLevels.includes("")) {aLevels.splice(aLevels.indexOf(""))}
+        if (bLevels.includes("")) {bLevels.splice(bLevels.indexOf(""))}
+
+        if (aLevels.length < 2 || bLevels.length < 2) {
+            alert("There must be at least two levels per factor to perform an anova test");
+            return;
+        }
+
         let newResponseData: TwoWayObservation[] = [];
         props.treatments.data.forEach(treatment => {
             for(let i = 0; i < treatment.amount; i++) {
