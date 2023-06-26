@@ -257,6 +257,18 @@ function OneWayAnovaTable(props: {factorLevels: StateProps, responseData: StateP
 
                     return {level: obs[0], value: Number(obs[1])} as OneWayObservation
                 });
+                let N = newObservations.length;
+                let levels = [...new Set(newObservations.map(x => x.level))];
+
+                if (levels.length < 2) {
+                    alert("There must be at least two levels to perform an anova test");
+                    return;
+                }
+                if (N - levels.length <= 0) {
+                    alert("There must be more observations than levels to perform an anova test");
+                    return;
+                }
+
 
                 updateData(newObservations);
                 } catch (error) {
