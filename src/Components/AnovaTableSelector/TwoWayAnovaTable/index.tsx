@@ -377,19 +377,32 @@ function TwoWayAnovaTable(props: {factorALevels: StateProps, factorBLevels: Stat
             reader.onload = (e: ProgressEvent<FileReader>) => {
                 try {
                     const contents = e.target?.result as string;
-    
-                let lines = contents.split("\n");
-                lines = lines.filter(line => line !== "");
-                let data = lines.map(x => x.split(","));
-                let newObservations = data.map(obs => {
-                    if (isNaN(Number(obs[2]))) { throw new Error("Not a number") }
-                    if (obs[0] === "") { throw new Error("Level cannot be blank")}
-                    if (obs[1] === "") { throw new Error("Level cannot be blank")}
+        
+                    let lines = contents.split("\n");
+                    lines = lines.filter(line => line !== "");
+                    let data = lines.map(x => x.split(","));
+                    let newObservations = data.map(obs => {
+                        if (isNaN(Number(obs[2]))) { throw new Error("Not a number") }
+                        if (obs[0] === "") { throw new Error("Level cannot be blank")}
+                        if (obs[1] === "") { throw new Error("Level cannot be blank")}
 
-                    return {levelA: obs[0], levelB: obs[1], value: Number(obs[2])} as TwoWayObservation
-                });
+                        return {levelA: obs[0], levelB: obs[1], value: Number(obs[2])} as TwoWayObservation
+                    });
+                    let N = newObservations.length;
+                    let aLevels = [...new Set(newObservations.map(x => x.levelA))];
+                    let bLevels = [...new Set(newObservations.map(x => x.levelB))];
 
-                updateData(newObservations);
+                    if (aLevels.length < 2 || bLevels.length < 2) {
+                        alert("There must be at least two levels per factor to perform an anova test");
+                        return;
+                    }
+
+                    if (N - aLevels.length * bLevels.length <= 0) {
+                        alert("There must be more observations than treatments to perform an anova test");
+                        return;
+                    }
+
+                    updateData(newObservations);
                 } catch (error) {
                     alert("There was an error reading the file. Please ensure the file follows the correct format.");
                 }

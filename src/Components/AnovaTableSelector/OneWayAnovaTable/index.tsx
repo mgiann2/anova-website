@@ -269,7 +269,6 @@ function OneWayAnovaTable(props: {factorLevels: StateProps, responseData: StateP
                     return;
                 }
 
-
                 updateData(newObservations);
                 } catch (error) {
                     alert("There was an error reading the file. Please ensure the file follows the correct format.");
