@@ -304,7 +304,7 @@ function OneWayAnovaTable(props: {factorLevels: StateProps, responseData: StateP
             <h3>Response Data</h3>
             <label htmlFor="dataFile">Import csv file</label>
             <input type="file" accept=".csv" name="Data File" id="dataFile" onChange={e => importFile(e)}/>
-            <p style={{margin: "0.5em 0 1em 0", fontSize:"small", color:"orange"}}>* The uploaded csv file will only be accepted if it follows the same format as the table below. Do not include any header rows in the csv file.</p>
+            <p style={{margin: "0.5em 0 1em 0", fontSize:"small", color:"rgb(var(--main-color-dark))"}}>* The uploaded csv file will only be accepted if it follows the same format as the table below. Do not include any header rows in the csv file.</p>
             <div style={{overflowY: "scroll", maxHeight: "300px"}}>
                 <table>
                     <tr>

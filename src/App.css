@@ -5,12 +5,12 @@
 }
 
 body {
-    font-family: 'Quicksand', sans-serif;
+    font-family: 'Nunito Sans', sans-serif;
     background-color: rgb(var(--bg-light));
 }
 
 input {
-    font-family: 'Quicksand', sans-serif;
+    font-family: 'Nunito Sans', sans-serif;
 }
 
 .main-content {
